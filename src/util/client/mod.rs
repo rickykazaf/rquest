@@ -33,7 +33,7 @@ use sync_wrapper::SyncWrapper;
 
 use crate::proxy::ProxyScheme;
 use crate::util::common;
-use crate::{cfg_bindable_device, cfg_non_bindable_device, impl_debug, AlpnProtos};
+use crate::{cfg_bindable_device, cfg_non_bindable_device, AlpnProtos};
 use connect::capture::CaptureConnectionExtension;
 use connect::{Alpn, Connect, Connected, Connection};
 use pool::Ver;
@@ -120,21 +120,25 @@ macro_rules! e {
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
 struct PoolKey {
     uri: Uri,
+    alpn_protos: Option<AlpnProtos>,
     network: NetworkScheme,
 }
 
 impl PoolKey {
-    fn new(uri: Uri, network: NetworkScheme) -> PoolKey {
-        PoolKey { uri, network }
+    fn new(uri: Uri, alpn_protos: Option<AlpnProtos>, network: NetworkScheme) -> PoolKey {
+        PoolKey {
+            uri,
+            alpn_protos,
+            network,
+        }
     }
 }
 
 /// Destination of the request
 ///
 /// This is used to store the destination of the request, the http version pref, and the pool key.
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Dst {
-    alpn_protos: Option<AlpnProtos>,
     inner: Arc<PoolKey>,
 }
 
@@ -170,8 +174,7 @@ impl Dst {
         // Convert the scheme and host to a URI
         into_uri(scheme, auth)
             .map(|uri| Dst {
-                alpn_protos,
-                inner: Arc::new(PoolKey::new(uri, network)),
+                inner: Arc::new(PoolKey::new(uri, alpn_protos, network)),
             })
             .map_err(|_| e!(UserAbsoluteUriRequired))
     }
@@ -192,7 +195,12 @@ impl Dst {
     /// Get the alpn protos
     #[inline(always)]
     pub(crate) fn alpn_protos(&self) -> Option<AlpnProtos> {
-        self.alpn_protos
+        self.inner.alpn_protos
+    }
+
+    #[inline(always)]
+    pub(crate) fn is_h2(&self) -> bool {
+        self.inner.alpn_protos == Some(AlpnProtos::Http2)
     }
 
     /// Take network scheme for iface
@@ -222,8 +230,6 @@ impl Dst {
         &self.inner
     }
 }
-
-impl_debug!(Dst, { alpn_protos, inner });
 
 impl std::ops::Deref for Dst {
     type Target = Uri;
@@ -324,7 +330,7 @@ where
     /// # fn main() {}
     /// ```
     pub fn request(&self, req: InnerRequest<B>) -> ResponseFuture {
-        let (mut req, network_scheme, http_version_pref) = req.pieces();
+        let (mut req, network_scheme, alpn_protos) = req.pieces();
         let is_http_connect = req.method() == Method::CONNECT;
         match req.version() {
             Version::HTTP_10 => {
@@ -338,12 +344,7 @@ where
             other => return ResponseFuture::error_version(other),
         };
 
-        let ctx = match Dst::new(
-            req.uri_mut(),
-            is_http_connect,
-            network_scheme,
-            http_version_pref,
-        ) {
+        let ctx = match Dst::new(req.uri_mut(), is_http_connect, network_scheme, alpn_protos) {
             Ok(s) => s,
             Err(err) => {
                 return ResponseFuture::new(future::err(err));
@@ -618,7 +619,11 @@ where
 
         let h1_builder = self.h1_builder.clone();
         let h2_builder = self.h2_builder.clone();
-        let ver = self.config.ver;
+        let ver = if dst.is_h2() {
+            Ver::Http2
+        } else {
+            self.config.ver
+        };
         let is_ver_h2 = ver == Ver::Http2;
         let connector = self.connector.clone();
         hyper_lazy(move || {

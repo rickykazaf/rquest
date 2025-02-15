@@ -3,7 +3,10 @@ mod support;
 
 use support::server;
 
-use http::header::{CONTENT_LENGTH, CONTENT_TYPE, TRANSFER_ENCODING};
+use http::{
+    header::{CONTENT_LENGTH, CONTENT_TYPE, TRANSFER_ENCODING},
+    Version,
+};
 #[cfg(feature = "json")]
 use std::collections::HashMap;
 
@@ -525,4 +528,72 @@ async fn test_client_os_spoofing() {
         .expect("request");
 
     assert_eq!(res.status(), rquest::StatusCode::OK);
+}
+
+#[tokio::test]
+async fn http1_version() {
+    let server = server::http(move |_| async move { http::Response::default() });
+
+    let resp = rquest::Client::builder()
+        .build()
+        .unwrap()
+        .get(format!("http://{}", server.addr()))
+        .version(Version::HTTP_11)
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.version(), rquest::Version::HTTP_11);
+}
+
+#[tokio::test]
+async fn http2_version() {
+    let server = server::http(move |_| async move { http::Response::default() });
+
+    let resp = rquest::Client::builder()
+        .build()
+        .unwrap()
+        .get(format!("http://{}", server.addr()))
+        .version(Version::HTTP_2)
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.version(), rquest::Version::HTTP_2);
+}
+
+#[tokio::test]
+async fn pool_cache() {
+    let client = rquest::Client::default();
+    let url = "https://httpbin.org/get";
+
+    let resp = client
+        .get(url)
+        .version(http::Version::HTTP_2)
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), rquest::StatusCode::OK);
+    assert_eq!(resp.version(), http::Version::HTTP_2);
+
+    let resp = client
+        .get(url)
+        .version(http::Version::HTTP_11)
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), rquest::StatusCode::OK);
+    assert_eq!(resp.version(), http::Version::HTTP_11);
+
+    let resp = client
+        .get(url)
+        .version(http::Version::HTTP_2)
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), rquest::StatusCode::OK);
+    assert_eq!(resp.version(), http::Version::HTTP_2);
 }
