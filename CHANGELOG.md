@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🚀 Features
+
+- Add private mode `Firefox135` support (#448)
+
+## [2.1.0] - 2025-02-17
+
+### 🚀 Features
+
+- Add chrome133 support (#441)
+- Add Firefox135 support (#444)
+- Add Android Firefox135 support (#445)
+
+### 🧪 Testing
+
+- Serialize tests that read/write the same environment variable (#442)
+
+### ⚙️ Miscellaneous Tasks
+
+- Remove unnecessary dev dependencies
+
+### Build
+
+- *(deps)* Update lru requirement from 0.12 to 0.13 (#435)
+- *(deps)* Update boring requirement from 4.14.0 to 4.15.6 (#439)
+
+## [2.0.6] - 2025-02-15
+
+### 🚀 Features
+
+- *(pool)* Connection pool distinguishes request versions (#430)
+
+## [2.0.5] - 2025-02-14
+
+### 🐛 Bug Fixes
+
+- Ignore Content-Length for methods without payload semantics (#428)
+
+## [2.0.3] - 2025-01-25
+
 ### 📚 Documentation
 
 - Enhance documentation for `ImpersonateBuilder` methods (#367)

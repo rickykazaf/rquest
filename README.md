@@ -1,4 +1,4 @@
-# rquest - `r`ust & quest
+# rquest
 
 [![CI](https://github.com/0x676e67/rquest/actions/workflows/ci.yml/badge.svg)](https://github.com/0x676e67/rquest/actions/workflows/ci.yml)
 [![Crates.io License](https://img.shields.io/crates/l/rquest)](./LICENSE)
@@ -9,7 +9,7 @@
 
 An ergonomic, all-in-one HTTP client for spoofing any browser with TLS, JA3/JA4, and HTTP2 fingerprints.
 
-- <ins>This project is intended for personal learning purposes only. Use at your own risk❕</ins>
+> <ins>**This project is intended for personal learning purposes only. Use at your own risk.**</ins>
 
 ## Features
 
@@ -20,12 +20,7 @@ An ergonomic, all-in-one HTTP client for spoofing any browser with TLS, JA3/JA4,
 - HTTP Proxies
 - WebSocket Upgrade
 - HTTPS via BoringSSL
-- Perfectly impersonate Chrome, Safari, and Firefox
-
-Additional learning resources include:
-
-- [API Documentation](https://docs.rs/rquest)
-- [Repository Examples](https://github.com/0x676e67/rquest/tree/main/examples)
+- Perfectly Chrome, Safari, and Firefox
 
 ## Example
 
@@ -34,7 +29,7 @@ This asynchronous example uses [Tokio](https://tokio.rs) and enables some option
 ```toml
 [dependencies]
 tokio = { version = "1", features = ["full"] }
-rquest = "2.0.0"
+rquest = "2.1.5"
 ```
 
 And then the code:
@@ -44,9 +39,9 @@ use rquest::{Client, Impersonate};
 
 #[tokio::main]
 async fn main() -> Result<(), rquest::Error> {
-    // Build a client to impersonate Firefox133
+    // Build a client to impersonate Firefox135
     let client = Client::builder()
-        .impersonate(Impersonate::Firefox133)
+        .impersonate(Impersonate::Firefox135)
         .build()?;
 
     // Use the API you're already familiar with
@@ -100,7 +95,7 @@ By default, `rquest` uses Mozilla's root certificates through the `webpki-roots`
 
   - **Chrome**
 
-    `Chrome100`, `Chrome101`, `Chrome104`, `Chrome105`, `Chrome106`, `Chrome107`, `Chrome108`, `Chrome109`, `Chrome114`, `Chrome116`, `Chrome117`, `Chrome118`, `Chrome119`, `Chrome120`, `Chrome123`, `Chrome124`, `Chrome126`, `Chrome127`, `Chrome128`, `Chrome129`, `Chrome130`, `Chrome131`,, `Chrome133`
+    `Chrome100`, `Chrome101`, `Chrome104`, `Chrome105`, `Chrome106`, `Chrome107`, `Chrome108`, `Chrome109`, `Chrome114`, `Chrome116`, `Chrome117`, `Chrome118`, `Chrome119`, `Chrome120`, `Chrome123`, `Chrome124`, `Chrome126`, `Chrome127`, `Chrome128`, `Chrome129`, `Chrome130`, `Chrome131`, `Chrome133`
 
   - **Edge**
 
@@ -116,7 +111,7 @@ By default, `rquest` uses Mozilla's root certificates through the `webpki-roots`
 
   - **Firefox**
 
-    `Firefox109`, `Firefox117`, `Firefox128`, `Firefox133`, `Firefox135`, `FirefoxAndroid135`
+    `Firefox109`, `Firefox117`, `Firefox128`, `Firefox133`, `Firefox135`, `FirefoxPrivate135`, `FirefoxAndroid135`
 
     </details>
 
