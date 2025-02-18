@@ -533,15 +533,15 @@ mod_generator!(
     [
         (
             MacOS,
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:133.0) Gecko/20100101 Firefox/135.0"
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:135.0) Gecko/20100101 Firefox/135.0"
         ),
         (
             Windows,
-            "Mozilla/5.0 (Windows NT 10.0; rv:133.0) Gecko/20100101 Firefox/135.0"
+            "Mozilla/5.0 (Windows NT 10.0; rv:135.0) Gecko/20100101 Firefox/135.0"
         ),
         (
             Linux,
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/135.0"
+            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0"
         )
     ]
 );
@@ -554,15 +554,15 @@ mod_generator!(
     [
         (
             MacOS,
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:133.0) Gecko/20100101 Firefox/135.0"
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:135.0) Gecko/20100101 Firefox/135.0"
         ),
         (
             Windows,
-            "Mozilla/5.0 (Windows NT 10.0; rv:133.0) Gecko/20100101 Firefox/135.0"
+            "Mozilla/5.0 (Windows NT 10.0; rv:135.0) Gecko/20100101 Firefox/135.0"
         ),
         (
             Linux,
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/135.0"
+            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0"
         )
     ]
 );
@@ -574,6 +574,6 @@ mod_generator!(
     header_initializer_with_zstd,
     [(
         Android,
-        "Mozilla/5.0 (Android 13; Mobile; rv:133.0) Gecko/20100101 Firefox/135.0"
+        "Mozilla/5.0 (Android 13; Mobile; rv:135.0) Gecko/135.0 Firefox/135.0"
     )]
 );
