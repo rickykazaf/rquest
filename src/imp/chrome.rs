@@ -124,7 +124,9 @@ macro_rules! http2_settings {
             .max_header_list_size(262144)
             .header_table_size(65536)
             .enable_push(false)
-            .headers_priority(HEADER_PRIORITY)
+            // .headers_priority(HEADER_PRIORITY)
+            // ricky: 注意这里添加了weight更改,原来是256
+            .headers_priority(StreamDependency::new(StreamId::from(0), 219, true))
             .headers_pseudo_order(HEADERS_PSEUDO_ORDER)
             .settings_order(SETTINGS_ORDER)
             .build()
