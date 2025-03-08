@@ -1,6 +1,8 @@
 use crate::imp::impersonate_imports::*;
 use http2::*;
 use tls::*;
+#[allow(unused_imports)]
+use hyper2::{Priority, StreamDependency, StreamId};
 
 macro_rules! mod_generator {
     (
